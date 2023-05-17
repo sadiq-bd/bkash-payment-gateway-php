@@ -1,4 +1,10 @@
 <?php
+/**
+ * @name: BkashAPI
+ * @type: API Handler
+ * @namespace: SADIQ_SOFT
+ * @author: Sadiq <sadiq.developer.bd@gmail.com>
+ */
 
 namespace SADIQ_SOFT;
 
@@ -227,7 +233,7 @@ class BkashAPI {
             'Content-Type: application/json'                                                       
         ), $headers);
         
-        $curl=curl_init($url);
+        $curl = curl_init($url);
         curl_setopt($curl,CURLOPT_HTTPHEADER, $postHeaders);
         curl_setopt($curl,CURLINFO_HEADER_OUT , true);
         curl_setopt($curl,CURLOPT_CUSTOMREQUEST, 'POST');
