@@ -13,10 +13,10 @@ require_once __DIR__ . '/src/BkashAPI.php';
 BkashAPI::setCallBackUrl('http://' . $_SERVER['HTTP_HOST'] . '/executepayment.php');
 
 
-BkashAPI::setAppKey('4f6o0cjfg4f23tfdadl1eqq');
-BkashAPI::setAppSecret('2is7hdktrekvrbljjh3w4qwtt43qt54y54mjvs5vl5qr3fug4b');
-BkashAPI::setUsername('sandbox4903tui439User02');
-BkashAPI::setPassword('sandboxi0tithrh4i234002@12345');
+BkashAPI::setAppKey('app_key_here');
+BkashAPI::setAppSecret('app_secret_here');
+BkashAPI::setUsername('username_here');
+BkashAPI::setPassword('password_here');
 
 
 ########### SANDBOX #################

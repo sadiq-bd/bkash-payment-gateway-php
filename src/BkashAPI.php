@@ -37,10 +37,10 @@ class BkashAPI {
         # self::setApiBaseURL('https://tokenized.pay.bka.sh/v1.2.0-beta/tokenized/');       # PRODUCTION
         
         self::setTokenGrantURL('/checkout/token/grant');
+        self::setRefreshTokenURL('/checkout/token/refresh');
         self::setCreatePaymentURL('/checkout/create');
         self::setExecutePaymentURL('/checkout/execute');
         self::setQueryPaymentURL('/checkout/payment/status');
-        self::setRefreshTokenURL('/checkout/token/refresh');
         self::setRefundURL('/checkout/payment/refund');
         self::setRefundStatusURL('/checkout/payment/refund');
         self::setSearchTransactionURL('/checkout/general/searchTransaction');
@@ -124,7 +124,7 @@ class BkashAPI {
     }
 
     public function grantToken() {
-        $this->setGrantToken($this->fetch(self::$tokenURL, array(
+        @$this->setGrantToken($this->fetch(self::$tokenURL, array(
             'username: ' . self::$username,
             'password: ' . self::$password
         ), array(
@@ -136,7 +136,7 @@ class BkashAPI {
 
     
     public function refreshToken(string $refrshTokenValue) {
-        $this->setGrantToken($this->fetch(self::$refreshTokenURL, array(
+        @$this->setGrantToken($this->fetch(self::$refreshTokenURL, array(
             'username: ' . self::$username,
             'password: ' . self::$password
         ), array(

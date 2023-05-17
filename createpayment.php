@@ -27,7 +27,7 @@ if (empty($_POST['ref'])) {
 
 $token = $_SESSION['token'];
 $amount = $_POST['amount'];
-$invoice = uniqid('INVOICE_');
+$invoice = uniqid('INV_');
 $reference = $_POST['ref'];
 
 $bkash = new BkashAPI;
