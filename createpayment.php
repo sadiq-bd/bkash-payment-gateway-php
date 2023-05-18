@@ -3,19 +3,10 @@ use SADIQ_SOFT\BkashAPI;
 require_once __DIR__ . '/config.php';
 session_start();
 
-header('Content-Type: application/json');
+// token genarate & refresh
+require_once __DIR__. '/token.php';
 
-if (empty($_SESSION['token'])) {
-    echo json_encode(['message' => 'Access token not granted yet']);
-    die;
-}
-// refresh if token expired
-if (time() > $_SESSION['token_expiration']) {
-    unset($_SESSION['token']);
-    
-    header('Location: ' . $_SERVER['PHP_SELF']);
-    exit;
-}
+header('Content-Type: application/json');
 
 if (empty($_POST['amount'])) {
     echo json_encode(['message' => 'Invalid amount']);

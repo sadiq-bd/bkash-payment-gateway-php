@@ -3,34 +3,8 @@ use SADIQ_SOFT\BkashAPI;
 require_once __DIR__ . '/config.php';
 session_start();
 
-if (empty($_SESSION['token'])) {
-    $bkash = new BkashAPI;
-    if (empty($_SESSION['token_refresh'])) {
-        $token = $bkash->grantToken();
-    } else {
-        $token = $bkash->refreshToken($_SESSION['token_refresh']);
-    }
-    if (strlen($token->getErrorInfo()) < 1) {
-        
-        if (empty($token->getGrantToken())) {
-            header('Content-Type: application/json');
-            print_r($token->response());
-            exit;
-        }
-        
-        $_SESSION['token'] = $token->getGrantToken();
-        $_SESSION['token_refresh'] = $token->jsonObj()->refresh_token;
-        $_SESSION['token_expiration'] = time() + $token->jsonObj()->expires_in;
-    }
-}
-
-// refresh if token expired
-if (time() > $_SESSION['token_expiration']) {
-    unset($_SESSION['token']);
-    
-    header('Location: ' . $_SERVER['PHP_SELF']);
-    exit;
-}
+// token genarate & refresh
+require_once __DIR__. '/token.php';
 
 ?>
 <!DOCTYPE html>

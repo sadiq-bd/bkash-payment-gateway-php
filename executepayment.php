@@ -3,6 +3,9 @@ use SADIQ_SOFT\BkashAPI;
 require_once __DIR__ . '/config.php';
 session_start();
 
+// token genarate & refresh
+require_once __DIR__. '/token.php';
+
 header('Content-Type: application/json');
 
 if (empty($_SESSION['token'])) {
