@@ -2,6 +2,9 @@
 use SADIQ_SOFT\BkashAPI;
 require_once __DIR__ . '/config.php';
 session_start();
+
+header('Content-Type: application/json');
+
 if (empty($_SESSION['token'])) {
     echo json_encode(['message' => 'Access token not granted yet']);
     die;
@@ -26,9 +29,13 @@ if (empty($_POST['ref'])) {
 
 
 $token = $_SESSION['token'];
+
 $amount = $_POST['amount'];
+
 $invoice = uniqid('INV_');
+
 $reference = $_POST['ref'];
+
 
 $bkash = new BkashAPI;
 if ($resp = $bkash->setGrantToken($token)->createPayment($amount, $invoice, $reference)) {

@@ -10,10 +10,11 @@ if (empty($_SESSION['token'])) {
     } else {
         $token = $bkash->refreshToken($_SESSION['token_refresh']);
     }
-    if (!$token->getErrorInfo()) {
+    if (strlen($token->getErrorInfo()) < 1) {
         
         if (empty($token->getGrantToken())) {
-            print_r($token->json());
+            header('Content-Type: application/json');
+            print_r($token->response());
             exit;
         }
         

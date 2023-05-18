@@ -3,6 +3,8 @@ use SADIQ_SOFT\BkashAPI;
 require_once __DIR__ . '/config.php';
 session_start();
 
+header('Content-Type: application/json');
+
 if (empty($_SESSION['token'])) {
     echo json_encode(['message' => 'Access token not granted yet']);
     die;
@@ -42,10 +44,12 @@ if (empty(($resp = $bkash->setGrantToken($token)->executePayment($paymentID))->j
         exit;
     }
     
+    echo json_encode([
+        'paymentID' => $paymentID,
+        'paymentStatus' => $status,
+        'transactionStatus' => $query->jsonObj()->transactionStatus
 
-    echo 'Payment ID: ' . $paymentID . "\n<br>\n";
-    echo 'Payment Status: ' . $status . "\n<br>\n";
-    echo 'Transaction Status: ' . $query->jsonObj()->transactionStatus;
+    ]);
 
 } else {
 

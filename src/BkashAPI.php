@@ -53,42 +53,45 @@ class BkashAPI {
        
 
     public static function setTokenGrantURL(string $value) {
-        self::$tokenURL = rtrim(self::$baseURL, '/') . '/' . ltrim($value, '/');
+        self::$tokenURL = self::makeApiURL($value);
     }
     
 
     public static function setCreatePaymentURL(string $value) {
-        self::$createURL = rtrim(self::$baseURL, '/') . '/' . ltrim($value, '/');
+        self::$createURL = self::makeApiURL($value);
     }
     
 
     public static function setExecutePaymentURL(string $value) {
-        self::$executeURL = rtrim(self::$baseURL, '/') . '/' . ltrim($value, '/');
+        self::$executeURL = self::makeApiURL($value);
     }
  
     public static function setQueryPaymentURL(string $value) {
-        self::$queryURL = rtrim(self::$baseURL, '/') . '/' . ltrim($value, '/');
+        self::$queryURL = self::makeApiURL($value);
     }
      
     public static function setRefreshTokenURL(string $value) {
-        self::$refreshTokenURL = rtrim(self::$baseURL, '/') . '/' . ltrim($value, '/');
+        self::$refreshTokenURL = self::makeApiURL($value);
     }
     
   
     public static function setRefundURL(string $value) {
-        self::$refundURL = rtrim(self::$baseURL, '/') . '/' . ltrim($value, '/');
+        self::$refundURL = self::makeApiURL($value);
     }
     
   
     public static function setRefundStatusURL(string $value) {
-        self::$refundStatusURL = rtrim(self::$baseURL, '/') . '/' . ltrim($value, '/');
+        self::$refundStatusURL = self::makeApiURL($value);
     }
     
   
     public static function setSearchTransactionURL(string $value) {
-        self::$searchURL = rtrim(self::$baseURL, '/') . '/' . ltrim($value, '/');
+        self::$searchURL = self::makeApiURL($value);
     }
-    
+
+    private static function makeApiURL(string $path) {
+        return rtrim(self::$baseURL, '/') . '/' . ltrim($path, '/');
+    }
  
  
     public static function setCallBackUrl(string $value) {
@@ -124,95 +127,113 @@ class BkashAPI {
     }
 
     public function grantToken() {
-        @$this->setGrantToken($this->fetch(self::$tokenURL, array(
-            'username: ' . self::$username,
-            'password: ' . self::$password
-        ), array(
-            'app_key' => self::$app_key,
-            'app_secret' => self::$app_secret
-        ))->jsonObj()->id_token);
+        $token = $this->fetch(
+            self::$tokenURL, 
+            array(
+                'username: ' . self::$username,
+                'password: ' . self::$password
+            ), array(
+                'app_key' => self::$app_key,
+                'app_secret' => self::$app_secret
+            )
+        );
+        if (!empty($token->jsonObj()->id_token)) {
+            $this->setGrantToken($token->jsonObj()->id_token);
+        }
         return $this;
     }
 
     
     public function refreshToken(string $refrshTokenValue) {
-        @$this->setGrantToken($this->fetch(self::$refreshTokenURL, array(
-            'username: ' . self::$username,
-            'password: ' . self::$password
-        ), array(
-            'app_key' => self::$app_key,
-            'app_secret' => self::$app_secret,
-            'refresh_token' => $refrshTokenValue
-        ))->jsonObj()->id_token);
+        $token = $this->fetch(
+            self::$refreshTokenURL, 
+            array(
+                'username: ' . self::$username,
+                'password: ' . self::$password
+            ), array(
+                'app_key' => self::$app_key,
+                'app_secret' => self::$app_secret,
+                'refresh_token' => $refrshTokenValue
+            )
+        );
+        if (!empty($token->jsonObj()->id_token)) {
+            $this->setGrantToken($token->jsonObj()->id_token);
+        }
         return $this;
     }
 
 
     public function createPayment($amount, string $invoice, string $ref, string $intent = 'sale') {
-        return $this->fetch(self::$createURL, array(
-            'authorization: '. $this->grantToken,
-            'x-app-key: '. self::$app_key
-        ), array(
-            'mode' => '0011',
-            'payerReference' => $ref,
-            'callbackURL' => self::$callBackURL,
-            'amount' => $amount, 
-            'currency' => 'BDT', 
-            'merchantInvoiceNumber' => $invoice,
-            'intent' => $intent
-        ));
+        return $this->fetch(
+            self::$createURL, 
+            $this->createAuthHeaders(), 
+            array(
+                'mode' => '0011',
+                'payerReference' => $ref,
+                'callbackURL' => self::$callBackURL,
+                'amount' => $amount, 
+                'currency' => 'BDT', 
+                'merchantInvoiceNumber' => $invoice,
+                'intent' => $intent
+            )
+        );
     }
 
     public function executePayment($paymentID) {
-        return $this->fetch(self::$executeURL, array(
-            'authorization: '. $this->grantToken,
-            'x-app-key: '. self::$app_key    
-        ), array(
-            'paymentID' => $paymentID
-        ));
+        return $this->fetch(
+            self::$executeURL, 
+            $this->createAuthHeaders(), 
+            array(
+                'paymentID' => $paymentID
+            )
+        );
     }
 
     
     public function queryPayment($paymentID) {
-        return $this->fetch(self::$queryURL, array(
-            'authorization: '. $this->grantToken,
-            'x-app-key: '. self::$app_key    
-        ), array(
-            'paymentID' => $paymentID
-        ));
+        return $this->fetch(
+            self::$queryURL, 
+            $this->createAuthHeaders(), 
+            array(
+                'paymentID' => $paymentID
+            )
+        );
     }
 
 
     public function refundPayment($paymentID, $amount, $trxID, $sku, $reason) {
-        return $this->fetch(self::$refundURL, array(
-            'authorization: '. $this->grantToken,
-            'x-app-key: '. self::$app_key    
-        ), array(
-            'paymentID' => $paymentID,
-            'amount' => $amount,
-            'trxID' => $trxID,
-            'sku' => $sku,
-            'reason' => $reason
-        ));
+        return $this->fetch(
+            self::$refundURL, 
+            $this->createAuthHeaders(), 
+            array(
+                'paymentID' => $paymentID,
+                'amount' => $amount,
+                'trxID' => $trxID,
+                'sku' => $sku,
+                'reason' => $reason
+            )
+        );
     }
 
     public function refundStatus($paymentID, $trxID) {
-        return $this->fetch(self::$refundStatusURL, array(
-            'authorization: '. $this->grantToken,
-            'x-app-key: '. self::$app_key    
-        ), array(
-            'paymentID' => $paymentID,
-            'trxID' => $trxID
-        ));
+        return $this->fetch(
+            self::$refundStatusURL, 
+            $this->createAuthHeaders(), 
+            array(
+                'paymentID' => $paymentID,
+                'trxID' => $trxID
+            )
+        );
     }
 
     public function searchTransaction($trxID) {
-        return $this->fetch(self::$searchURL, array(
-            'authorization: '. $this->grantToken,
-            'x-app-key: '. self::$app_key    
-        ), array(
-            'trxID' => $trxID
-        ));
+        return $this->fetch(
+            self::$searchURL, 
+            $this->createAuthHeaders(), 
+            array(
+                'trxID' => $trxID
+            )
+        );
     }
 
     public function response() {
@@ -227,7 +248,14 @@ class BkashAPI {
         return @json_decode($this->response(), null);
     }
 
-    private function fetch($url, $headers = [], $postData = []) {
+    private function createAuthHeaders() {
+        return array(
+            'authorization: '. $this->grantToken,
+            'x-app-key: '. self::$app_key    
+        );
+    }
+
+    private function fetch(string $url, array $headers = [], array $postData = []) {
         
         $postHeaders = array_merge(array(
             'Content-Type: application/json'                                                       
@@ -235,7 +263,6 @@ class BkashAPI {
         
         $curl = curl_init($url);
         curl_setopt($curl,CURLOPT_HTTPHEADER, $postHeaders);
-        curl_setopt($curl,CURLINFO_HEADER_OUT , true);
         curl_setopt($curl,CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($curl,CURLOPT_RETURNTRANSFER, true);
         if (!empty($postData)) curl_setopt($curl,CURLOPT_POSTFIELDS, json_encode($postData));
