@@ -8,14 +8,13 @@ require_once __DIR__. '/token.php';
 
 header('Content-Type: application/json');
 
-if (empty($_POST['amount'])) {
-    echo json_encode(['message' => 'Invalid amount']);
-    die;
-}
-
-if (empty($_POST['ref'])) {
-    echo json_encode(['message' => 'reference is empty']);
-    die;
+$requires = [
+    'amount', 'ref'
+];
+foreach ($requires as $req) {
+    if (empty($_POST[$req])) {
+        exit(json_encode(['message' => $req.' is missing']));
+    }
 }
 
 

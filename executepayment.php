@@ -8,20 +8,16 @@ require_once __DIR__. '/token.php';
 
 header('Content-Type: application/json');
 
-if (empty($_SESSION['token'])) {
-    echo json_encode(['message' => 'Access token not granted yet']);
-    die;
+
+$requires = [
+    'paymentID', 'status'
+];
+foreach ($requires as $req) {
+    if (empty($_GET[$req])) {
+        exit(json_encode(['message' => $req.' is missing']));
+    }
 }
 
-if (empty($_GET['paymentID'])) {
-    echo json_encode(['message' => 'paymentID missing']);
-    die;
-}
-
-if (empty($_GET['status'])) {
-    echo json_encode(['message' => 'status missing']);
-    die;
-}
 
 $token = $_SESSION['token'];
 $paymentID = $_GET['paymentID'];
