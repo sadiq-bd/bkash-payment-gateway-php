@@ -26,7 +26,7 @@ $status = $_GET['status'];
 
 
 $bkash = new BkashAPI;
-if (empty(($resp = $bkash->setGrantToken($token)->executePayment($paymentID))->json()['errorCode'])) {
+if (empty(($resp = $bkash->setGrantToken($token)->executePayment($paymentID))->jsonObj()->errorCode)) {
     
     $query = $bkash->queryPayment($paymentID);
 
