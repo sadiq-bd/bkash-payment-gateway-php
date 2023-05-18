@@ -163,7 +163,7 @@ class BkashAPI {
     }
 
 
-    public function createPayment($amount, string $invoice, string $ref, string $intent = 'sale') {
+    public function createPayment(string|int $amount, string $invoice, string $ref, string $intent = 'sale') {
         return $this->fetch(
             self::$createURL, 
             $this->createAuthHeaders(), 
@@ -179,7 +179,7 @@ class BkashAPI {
         );
     }
 
-    public function executePayment($paymentID) {
+    public function executePayment(string $paymentID) {
         return $this->fetch(
             self::$executeURL, 
             $this->createAuthHeaders(), 
@@ -190,7 +190,7 @@ class BkashAPI {
     }
 
     
-    public function queryPayment($paymentID) {
+    public function queryPayment(string $paymentID) {
         return $this->fetch(
             self::$queryURL, 
             $this->createAuthHeaders(), 
@@ -201,7 +201,7 @@ class BkashAPI {
     }
 
 
-    public function refundPayment($paymentID, $amount, $trxID, $sku, $reason) {
+    public function refundPayment(string $paymentID, string|int $amount, string $trxID, string $sku, string $reason) {
         return $this->fetch(
             self::$refundURL, 
             $this->createAuthHeaders(), 
@@ -215,7 +215,7 @@ class BkashAPI {
         );
     }
 
-    public function refundStatus($paymentID, $trxID) {
+    public function refundStatus(string $paymentID, string $trxID) {
         return $this->fetch(
             self::$refundStatusURL, 
             $this->createAuthHeaders(), 
@@ -226,7 +226,7 @@ class BkashAPI {
         );
     }
 
-    public function searchTransaction($trxID) {
+    public function searchTransaction(string $trxID) {
         return $this->fetch(
             self::$searchURL, 
             $this->createAuthHeaders(), 
