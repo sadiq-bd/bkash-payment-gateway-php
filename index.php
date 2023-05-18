@@ -53,8 +53,8 @@ if (time() > $_SESSION['token_expiration']) {
 <center>
     <h2>Bkash Payment Gateway</h2>
     <form action="./createpayment.php" method="post">
-        <input type="number" name="amount" id="amountInput" value="" placeholder="Amount"><br>
-        <input type="text" name="ref" id="refInput" value="" placeholder="Reference"><br>
+        <input type="number" name="amount" id="amountInput" step="0.01" placeholder="Amount" required><br>
+        <input type="text" name="ref" id="refInput" placeholder="Reference" required><br>
         <button type="submit">Pay with Bkash</button>
     </form>
 </center>
